@@ -15,7 +15,32 @@ export async function POST(req: Request) {
     const { db } = await connectToDatabase();
     const collection = db.collection("applications");
 
-    const result = await collection.insertOne({ name, year, fact, number, usn, email, createdAt: new Date() });
+    // Normalize USN for comparison
+    const normalizedUsn = typeof usn === 'string' ? usn.toUpperCase().replace(/\s+/g, '') : usn;
+
+    // Check for existing user by email, number, or usn
+    const conflict = await collection.findOne({
+      $or: [
+        { email },
+        { number },
+        { usn: normalizedUsn },
+      ],
+    });
+
+    if (conflict) {
+      // Determine which field conflicts
+      let field = 'unknown';
+      if (conflict.email === email) field = 'email';
+      else if (conflict.number === number) field = 'number';
+      else if (conflict.usn === normalizedUsn) field = 'usn';
+
+      return new Response(JSON.stringify({ error: 'Duplicate entry', field }), {
+        status: 409,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const result = await collection.insertOne({ name, year, fact, number, usn: normalizedUsn, email, createdAt: new Date() });
 
     return new Response(JSON.stringify({ success: true, id: result.insertedId }), {
       status: 201,
