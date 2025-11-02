@@ -15,6 +15,7 @@ interface ModalGalleryProps {
   images: Img[];
   imageWidth: number;
   imageHeight: number;
+  onHoverChange?: (isPaused: boolean) => void;
 }
 
 export default function ModalGallery({
@@ -25,6 +26,7 @@ export default function ModalGallery({
   images,
   imageWidth,
   imageHeight,
+  onHoverChange,
 }: ModalGalleryProps) {
   const [open, setOpen] = useState(false);
   const [idx, setIdx] = useState(0);
@@ -45,7 +47,13 @@ export default function ModalGallery({
   }, [open, total]);
 
   return (
-    <div className="relative -mt-8 flex items-center justify-center sm:-mt-12 lg:-mt-16">
+    <div 
+      className="relative flex items-center justify-center"
+      onMouseEnter={() => onHoverChange?.(true)}
+      onMouseLeave={() => onHoverChange?.(false)}
+      onFocus={() => onHoverChange?.(true)}
+      onBlur={() => onHoverChange?.(false)}
+    >
       {/* Thumbnail button */}
       <button
         onClick={() => {
@@ -64,10 +72,10 @@ export default function ModalGallery({
             height={thumbHeight}
             alt={thumbAlt}
             priority
-            className="block h-auto w-full rounded-2xl object-cover"
+            className="block h-auto w-full rounded-2xl object-cover transition-opacity duration-700"
           />
-          {/* 🔵 Bluish tint overlay */}
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-900/70 via-indigo-500/40 to-indigo-900/70 mix-blend-overlay pointer-events-none" />
+          {/* 🔵 Bluish tint overlay - lighter for better visibility */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-900/40 via-indigo-500/20 to-indigo-900/40 mix-blend-overlay pointer-events-none" />
         </figure>
       </button>
 

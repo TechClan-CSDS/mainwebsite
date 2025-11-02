@@ -1,8 +1,25 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import ModalGallery from "@/components/modal-gallery";
 
+const slides = ["/images/pic1.JPG", "/images/pic2.jpg", "/images/pic3.jpg"];
+
 export default function Hero() {
+  const [index, setIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    // Honor prefers-reduced-motion
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    if (isPaused) return;
+
+    const id = setInterval(() => setIndex((i) => (i + 1) % slides.length), 5000);
+    return () => clearInterval(id);
+  }, [isPaused]);
+
   return (
     <section>
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -21,7 +38,7 @@ export default function Hero() {
               <div className="mx-auto max-w-xs sm:flex sm:max-w-none sm:justify-center">
                 <div data-aos="fade-up" data-aos-delay={400}>
                   <a
-                    className="btn group mb-4 w-full bg-linear-to-t from-indigo-600 to-indigo-500 bg-[length:100%_100%] bg-[bottom] text-white shadow-[inset_0px_1px_0px_0px_--theme(--color-white/.16)] hover:bg-[length:100%_150%] sm:mb-0 sm:w-auto"
+                    className="btn group mb-4 w-full inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 px-6 py-3 text-sm font-semibold text-white shadow-[0_10px_30px_-20px_rgba(99,102,241,0.95)] transition hover:from-indigo-500 hover:to-indigo-400 sm:mb-0 sm:w-auto"
                     href="/apply"
                   >
                     <span className="relative inline-flex items-center">
@@ -35,13 +52,14 @@ export default function Hero() {
           </div>
 
           <ModalGallery
-            thumb="/images/IMG_1613.JPG"
+            thumb={slides[index]}
             thumbWidth={1080}
             thumbHeight={720}
             thumbAlt="TechClan highlight"
-            images={["/images/IMG_1613.JPG", "/images/IMG_1613.JPG"]}
+            images={slides}
             imageWidth={1920}
             imageHeight={1280}
+            onHoverChange={setIsPaused}
           />
         </div>
       </div>
