@@ -12,7 +12,16 @@ export async function POST(req: Request) {
       });
     }
 
-    const { db } = await connectToDatabase();
+    let db;
+    try {
+      ({ db } = await connectToDatabase());
+    } catch (connectErr) {
+      console.error("/api/applications connect error:", connectErr);
+      return new Response(JSON.stringify({ error: "Server configuration error: database not available" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
     const collection = db.collection("applications");
 
     // Normalize USN for comparison
@@ -57,7 +66,16 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    const { db } = await connectToDatabase();
+    let db;
+    try {
+      ({ db } = await connectToDatabase());
+    } catch (connectErr) {
+      console.error("/api/applications GET connect error:", connectErr);
+      return new Response(JSON.stringify({ error: "Server configuration error: database not available" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
     const collection = db.collection("applications");
 
     const recent = await collection
