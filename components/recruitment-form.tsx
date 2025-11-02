@@ -12,13 +12,40 @@ export default function RecruitmentForm() {
     email: "",
   });
 
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Thank you for applying! We'll get back to you soon.");
+    // Post form to API
+    (async () => {
+      setStatus("loading");
+      setErrorMsg("");
+      try {
+        const res = await fetch("/api/applications", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
+
+        if (res.ok) {
+          setStatus("success");
+          setForm({ name: "", year: "", fact: "", number: "", usn: "", email: "" });
+        } else {
+          const data = await res.json().catch(() => ({}));
+          setErrorMsg(data?.error || "Failed to submit. Please try again.");
+          setStatus("error");
+        }
+      } catch (err) {
+        console.error(err);
+        setErrorMsg("Network error. Please try again later.");
+        setStatus("error");
+      }
+    })();
   };
 
   return (
@@ -153,9 +180,18 @@ export default function RecruitmentForm() {
                 <button
                   type="submit"
                   className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 px-4 py-3 text-sm font-semibold tracking-wide text-white shadow-[0_10px_30px_-20px_rgba(99,102,241,0.95)] transition hover:from-indigo-500 hover:to-indigo-400"
+                  disabled={status === "loading"}
                 >
-                  Submit Application
+                  {status === "loading" ? "Sending..." : "Submit Application"}
                 </button>
+              </div>
+              <div className="mt-2">
+                {status === "success" && (
+                  <p className="text-sm text-green-400">Thank you — your application has been submitted.</p>
+                )}
+                {status === "error" && (
+                  <p className="text-sm text-rose-400">{errorMsg || "Submission failed."}</p>
+                )}
               </div>
             </form>
           </div>
