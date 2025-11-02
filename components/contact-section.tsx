@@ -53,9 +53,9 @@ export default function ContactSection() {
 
             <div className="relative space-y-6">
               <div>
-                <h2 className="text-lg font-semibold text-white">Ways to reach us</h2>
-                <p className="mt-2 text-sm text-indigo-100/70">
-                  Drop a line and we&rsquo;ll get back within a day.
+                <h2 className="text-xl font-bold text-white">Get in touch</h2>
+                <p className="mt-3 text-sm text-indigo-100/70 leading-relaxed">
+                  Drop us a message and we'll get back to you within a day.
                 </p>
               </div>
               <dl className="space-y-5 text-sm text-indigo-100/80">

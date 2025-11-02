@@ -35,6 +35,9 @@ export default function ModalGallery({
   const next = () => setIdx((i) => (i + 1) % total);
   const prev = () => setIdx((i) => (i - 1 + total) % total);
 
+  const modalWidth = Math.min(imageWidth, 920);
+  const modalHeight = Math.min(imageHeight, 660);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -91,46 +94,66 @@ export default function ModalGallery({
             className="relative w-auto max-w-[92vw] overflow-hidden rounded-2xl bg-black shadow-2xl duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
           >
             <div className="relative flex items-center justify-center bg-black">
-              <Image
-                src={images[idx]}
-                width={imageWidth}
-                height={imageHeight}
-                alt={`Slide ${idx + 1}`}
-                className="h-auto max-h-[90vh] w-auto object-contain rounded-2xl"
-                priority
-              />
-              {/* 🔵 Bluish tint overlay inside modal */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-900/60 via-indigo-500/25 to-indigo-900/60 mix-blend-overlay pointer-events-none" />
-              {total > 1 && (
-                <>
-                  <button
-                    onClick={prev}
-                    aria-label="Previous"
-                    className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 px-3 py-2 backdrop-blur hover:bg-white/20"
+              <div
+                className="relative flex items-center justify-center"
+                style={{
+                  width: modalWidth,
+                  height: modalHeight,
+                  maxWidth: "90vw",
+                  maxHeight: "80vh",
+                }}
+              >
+                {images.map((image, i) => (
+                  <div
+                    key={i}
+                    className={`absolute inset-0 flex items-center justify-center transition-opacity duration-700 ease-in-out ${
+                      i === idx ? "opacity-100" : "pointer-events-none opacity-0"
+                    }`}
                   >
-                    ‹
-                  </button>
-                  <button
-                    onClick={next}
-                    aria-label="Next"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 px-3 py-2 backdrop-blur hover:bg-white/20"
-                  >
-                    ›
-                  </button>
-                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-                    {images.map((_, i) => (
-                      <button
-                        key={i}
-                        aria-label={`Go to slide ${i + 1}`}
-                        onClick={() => setIdx(i)}
-                        className={`h-2.5 w-2.5 rounded-full ${
-                          i === idx ? "bg-indigo-400" : "bg-white/30"
-                        } hover:bg-white/60`}
-                      />
-                    ))}
+                    <Image
+                      src={image}
+                      width={imageWidth}
+                      height={imageHeight}
+                      alt={`Slide ${i + 1}`}
+                      className="h-auto max-h-[70vh] w-auto max-w-full rounded-2xl object-contain transition-opacity duration-700 ease-in-out"
+                      priority={i === idx}
+                      loading={i === idx ? "eager" : "lazy"}
+                    />
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-900/60 via-indigo-500/25 to-indigo-900/60 mix-blend-overlay pointer-events-none" />
                   </div>
-                </>
-              )}
+                ))}
+
+                {total > 1 && (
+                  <>
+                    <button
+                      onClick={prev}
+                      aria-label="Previous"
+                      className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 px-3 py-2 backdrop-blur hover:bg-white/20"
+                    >
+                      ‹
+                    </button>
+                    <button
+                      onClick={next}
+                      aria-label="Next"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 px-3 py-2 backdrop-blur hover:bg-white/20"
+                    >
+                      ›
+                    </button>
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+                      {images.map((_, i) => (
+                        <button
+                          key={i}
+                          aria-label={`Go to slide ${i + 1}`}
+                          onClick={() => setIdx(i)}
+                          className={`h-2.5 w-2.5 rounded-full ${
+                            i === idx ? "bg-indigo-400" : "bg-white/30"
+                          } hover:bg-white/60`}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </DialogPanel>
         </div>

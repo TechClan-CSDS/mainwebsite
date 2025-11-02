@@ -1,6 +1,6 @@
 export const metadata = {
-  title: "Home - Open PRO",
-  description: "Page description",
+  title: "Home",
+  description: "TechClan - Learn, Build, Collaborate. A modern community for Data Science enthusiasts with real-world projects and workshops.",
 };
 
 import Hero from "@/components/hero-home";

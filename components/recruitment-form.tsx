@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+
+type SubmissionStatus = "idle" | "loading" | "success" | "error";
 
 export default function RecruitmentForm() {
   const [form, setForm] = useState({
@@ -12,13 +14,14 @@ export default function RecruitmentForm() {
     email: "",
   });
 
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<SubmissionStatus>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [usnError, setUsnError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [numberError, setNumberError] = useState("");
+  const [showTips, setShowTips] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     let value = e.target.value;
     // Force USN to uppercase and remove spaces
     if (e.target.name === "usn") {
@@ -30,6 +33,7 @@ export default function RecruitmentForm() {
     if (e.target.name === "usn") setUsnError("");
     if (e.target.name === "email") setEmailError("");
     if (e.target.name === "number") setNumberError("");
+    if (status !== "loading") setStatus("idle");
   };
 
   const validateUSN = (usn: string) => {
@@ -48,7 +52,7 @@ export default function RecruitmentForm() {
     return false;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Client-side validation before sending
     setErrorMsg("");
@@ -101,13 +105,79 @@ export default function RecruitmentForm() {
     })();
   };
 
+  useEffect(() => {
+    if (status === "success" || (status === "error" && !errorMsg)) {
+      const timeout = setTimeout(() => setStatus("idle"), 3000);
+      return () => clearTimeout(timeout);
+    }
+    return undefined;
+  }, [status, errorMsg]);
+
+  const buttonLabel = (() => {
+    if (status === "loading") return "Submitting...";
+    if (status === "success") return "Application sent";
+    if (status === "error") return "Retry application";
+    return "Submit application";
+  })();
+
   return (
-    <section id="apply" className="relative py-20 text-gray-100 sm:py-24">
+    <section id="apply" className="relative py-12 sm:py-20 text-gray-100">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        {/* Prep Tips Popup */}
+        {showTips && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setShowTips(false)}>
+            <div className="relative max-w-lg w-full bg-gray-950/95 border border-[#3E47E0]/30 rounded-3xl p-6 sm:p-8 shadow-[0_0_60px_-12px_rgba(62,71,224,0.6)]" onClick={(e) => e.stopPropagation()}>
+              <button
+                onClick={() => setShowTips(false)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+                aria-label="Close"
+              >
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              
+              <div className="mb-4">
+                <h3 className="text-2xl font-bold text-white mb-2">Recruitment Process</h3>
+                <p className="text-indigo-200/70 text-sm">Here's what to expect</p>
+              </div>
+              
+              <div className="space-y-4 text-sm">
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#3E47E0]/20 flex items-center justify-center text-[#3E47E0] font-semibold">1</div>
+                  <div>
+                    <h4 className="font-semibold text-white mb-1">Basic Coding Test</h4>
+                    <p className="text-indigo-200/70">Test your problem-solving and programming fundamentals. Focus on logic and clean code.</p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#3E47E0]/20 flex items-center justify-center text-[#3E47E0] font-semibold">2</div>
+                  <div>
+                    <h4 className="font-semibold text-white mb-1">General Interview</h4>
+                    <p className="text-indigo-200/70">Discussion about your interests, projects, and why you want to join TechClan.</p>
+                  </div>
+                </div>
+                
+                <div className="mt-6 p-4 bg-[#3E47E0]/10 border border-[#3E47E0]/30 rounded-xl">
+                  <p className="text-indigo-200 text-sm">
+                    <span className="font-semibold">📅 Dates:</span> Will be announced soon after applications close.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div
-          className="relative mx-auto w-full max-w-3xl overflow-hidden rounded-3xl border border-indigo-500/20 bg-gray-950/70 p-8 shadow-[0_0_45px_-18px_rgba(99,102,241,0.65)] backdrop-blur md:max-w-4xl md:p-12"
+          className="relative mx-auto w-full max-w-2xl overflow-hidden rounded-3xl border border-[#3E47E0]/20 bg-gray-950/80 p-6 sm:p-8 md:p-10 shadow-[0_0_60px_-12px_rgba(62,71,224,0.45)] backdrop-blur-xl md:max-w-3xl"
           data-aos="fade-up"
         >
+          <div
+            aria-hidden
+            className="absolute -top-24 right-1/3 h-40 w-40 rounded-full bg-[#3E47E0]/20 blur-3xl sm:-top-32 sm:h-52 sm:w-52"
+          />
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-[#3E47E0]/0 via-[#3E47E0]/60 to-[#3E47E0]/0" aria-hidden />
           <div
             aria-hidden
             className="absolute -top-24 right-1/3 h-40 w-40 rounded-full bg-indigo-500/20 blur-3xl sm:-top-32 sm:h-52 sm:w-52"
@@ -115,17 +185,28 @@ export default function RecruitmentForm() {
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-indigo-500/0 via-indigo-400/50 to-indigo-500/0" aria-hidden />
 
           <div className="relative">
-            <div className="mb-10 text-center md:mb-12">
-              <p className="mb-3 text-xs uppercase tracking-[0.35em] text-indigo-300/70">Applications Open</p>
-              <h2 className="bg-gradient-to-r from-indigo-300 via-indigo-200 to-indigo-400 bg-clip-text text-3xl font-semibold text-transparent sm:text-4xl">
+            <div className="mb-6 sm:mb-8 md:mb-10 text-center">
+              <h2 className="bg-gradient-to-r from-indigo-200 via-white to-indigo-200 bg-clip-text text-2xl font-semibold text-transparent sm:text-3xl md:text-[2.75rem]">
                 Join TechClan
               </h2>
-              <p className="mt-4 text-sm text-indigo-100/70 sm:text-base">
+              <p className="mt-3 text-sm sm:text-base text-indigo-100/70">
+                Opportunity to collaborate with builders across TechClan.
               </p>
+              
+              {/* Prep Tips Button */}
+              <button
+                onClick={() => setShowTips(true)}
+                className="mt-4 inline-flex items-center gap-2 text-sm text-[#3E47E0] hover:text-[#5E67F0] transition-colors underline underline-offset-4"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                View recruitment process & tips
+              </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="grid gap-5 sm:gap-6">
-              <div className="grid gap-5 sm:grid-cols-2 sm:gap-6">
+            <form onSubmit={handleSubmit} className="grid gap-4 sm:gap-5">
+              <div className="grid gap-4 sm:grid-cols-2 sm:gap-5">
                 <div>
                   <label htmlFor="name" className="mb-1 block text-sm font-medium text-indigo-100/80">
                     Full Name
@@ -178,7 +259,7 @@ export default function RecruitmentForm() {
                 />
               </div>
 
-              <div className="grid gap-5 sm:grid-cols-2 sm:gap-6">
+              <div className="grid gap-4 sm:grid-cols-2 sm:gap-5">
                 <div>
                   <label htmlFor="number" className="mb-1 block text-sm font-medium text-indigo-100/80">
                     Contact Number
@@ -268,10 +349,12 @@ export default function RecruitmentForm() {
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 px-4 py-3 text-sm font-semibold tracking-wide text-white shadow-[0_10px_30px_-20px_rgba(99,102,241,0.95)] transition hover:from-indigo-500 hover:to-indigo-400"
+                  className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 px-4 py-3 text-sm font-semibold tracking-wide text-white shadow-[0_10px_24px_-18px_rgba(99,102,241,0.9)] transition hover:from-indigo-500 hover:to-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:ring-offset-gray-950"
                   disabled={status === "loading"}
+                  aria-live="polite"
+                  aria-busy={status === "loading"}
                 >
-                  {status === "loading" ? "Sending..." : "Submit Application"}
+                  {buttonLabel}
                 </button>
               </div>
               <div className="mt-3">
