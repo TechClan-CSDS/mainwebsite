@@ -40,7 +40,7 @@ export default function Hero() {
                                 <div data-aos="fade-up" data-aos-delay={350}>
                   <a
                     className="group inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-[#3E47E0]/40 px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-semibold text-indigo-200 backdrop-blur-sm transition-all duration-300 hover:border-[#3E47E0] hover:bg-[#3E47E0]/10 hover:text-white w-full sm:w-auto"
-                    href="/contact"
+                    href="/apply"
                   >
                     <span className="relative inline-flex items-center">
                       Apply Now
