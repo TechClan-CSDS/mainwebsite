@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import ModalGallery from "@/components/modal-gallery";
 
-const slides = ["/images/pic1.JPG", "/images/pic2.jpg", "/images/pic3.jpg"];
+const slides = ["/images/pic1.jpg", "/images/pic2.jpg", "/images/pic3.jpg"];
 
 export default function Hero() {
   const [index, setIndex] = useState(0);
