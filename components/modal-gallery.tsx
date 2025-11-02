@@ -65,7 +65,7 @@ export default function ModalGallery({
         data-aos="fade-up"
         data-aos-delay={200}
       >
-        <figure className="relative inline-block w-full max-w-[520px] overflow-hidden rounded-2xl shadow-lg sm:max-w-[600px] lg:max-w-[680px] xl:max-w-[720px]">
+        <figure className="relative inline-block w-full max-w-[420px] overflow-hidden rounded-2xl shadow-lg sm:max-w-[480px] lg:max-w-[540px]">
           <Image
             src={thumb}
             width={thumbWidth}

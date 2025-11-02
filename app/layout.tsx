@@ -51,9 +51,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${nacelle.variable} relative bg-gray-950 font-inter text-base text-gray-200 antialiased`}
+        className={`${inter.variable} ${nacelle.variable} relative font-inter text-base text-gray-200 antialiased`}
       >
-        <div className="pointer-events-none fixed inset-0 -z-10 [background:radial-gradient(100%_250%_at_50%_10%,#000_40%,#63e_100%)]" />
+        {/* Softer purple radial gradient matching logo color */}
+        <div className="fixed inset-0 -z-10 h-full w-full [background:radial-gradient(125%_125%_at_50%_10%,#000_60%,#3E47E0_100%)]"></div>
+        
+        {/* Dot pattern overlay */}
+        <div className="fixed inset-0 -z-[9] h-screen w-screen bg-[radial-gradient(#ffffff33_1px,transparent_1px)] bg-[size:20px_20px]"></div>
+        
         <div className="flex min-h-screen flex-col overflow-hidden supports-[overflow:clip]:overflow-clip">
           <Header />
           {children}

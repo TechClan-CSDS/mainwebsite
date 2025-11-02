@@ -21,10 +21,10 @@ export default function Hero() {
   }, [isPaused]);
 
   return (
-    <section>
+    <section className="min-h-screen flex items-center">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="py-12 md:py-20">
-          <div className="pb-12 text-center md:pb-20">
+        <div className="py-12 md:py-16">
+          <div className="pb-8 text-center md:pb-12">
             <h1
               className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,var(--color-gray-200),var(--color-indigo-200),var(--color-gray-50),var(--color-indigo-300),var(--color-gray-200))] bg-[length:200%_auto] bg-clip-text pb-5 font-nacelle text-4xl font-semibold text-transparent md:text-9xl"
               data-aos="fade-up"
