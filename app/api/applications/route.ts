@@ -24,10 +24,8 @@ export async function POST(req: Request) {
     }
     const collection = db.collection("applications");
 
-    // Normalize USN for comparison
     const normalizedUsn = typeof usn === 'string' ? usn.toUpperCase().replace(/\s+/g, '') : usn;
 
-    // Check for existing user by email, number, or usn
     const conflict = await collection.findOne({
       $or: [
         { email },
@@ -37,7 +35,6 @@ export async function POST(req: Request) {
     });
 
     if (conflict) {
-      // Determine which field conflicts
       let field = 'unknown';
       if (conflict.email === email) field = 'email';
       else if (conflict.number === number) field = 'number';

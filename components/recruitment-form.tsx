@@ -23,13 +23,11 @@ export default function RecruitmentForm() {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     let value = e.target.value;
-    // Force USN to uppercase and remove spaces
     if (e.target.name === "usn") {
       value = value.toUpperCase().replace(/\s+/g, "");
     }
 
     setForm({ ...form, [e.target.name]: value });
-    // Clear field-specific errors while typing
     if (e.target.name === "usn") setUsnError("");
     if (e.target.name === "email") setEmailError("");
     if (e.target.name === "number") setNumberError("");
@@ -37,24 +35,20 @@ export default function RecruitmentForm() {
   };
 
   const validateUSN = (usn: string) => {
-    // USN format: 1DSXXCDXXX where X = digits
     const pattern = /^1DS\d{2}CD\d{3}$/;
     return pattern.test(usn);
   };
 
   const validateEmailDomain = (email: string) => {
-    // basic email pattern
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) return false;
     const domain = email.split("@")[1].toLowerCase();
-    // Accept gmail.com, x.com, or any .edu domain
     if (domain === "gmail.com" || domain === "x.com" || domain.endsWith(".edu")) return true;
     return false;
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Client-side validation before sending
     setErrorMsg("");
     setStatus("idle");
 
@@ -70,7 +64,6 @@ export default function RecruitmentForm() {
       return;
     }
 
-    // Post form to API
     (async () => {
       setStatus("loading");
       try {
@@ -85,7 +78,6 @@ export default function RecruitmentForm() {
           setForm({ name: "", year: "", fact: "", number: "", usn: "", email: "" });
         } else {
           const data = await res.json().catch(() => ({}));
-          // Handle uniqueness conflict
           if (res.status === 409 && data?.field) {
             if (data.field === 'email') setEmailError('An application with this email already exists.');
             else if (data.field === 'usn') setUsnError('An application with this USN already exists.');
@@ -123,7 +115,7 @@ export default function RecruitmentForm() {
   return (
     <section id="apply" className="relative py-12 sm:py-20 text-gray-100">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        {/* Prep Tips Popup */}
+        
         {showTips && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setShowTips(false)}>
             <div className="relative max-w-lg w-full bg-gray-950/95 border border-[#3E47E0]/30 rounded-3xl p-6 sm:p-8 shadow-[0_0_60px_-12px_rgba(62,71,224,0.6)]" onClick={(e) => e.stopPropagation()}>
@@ -170,7 +162,7 @@ export default function RecruitmentForm() {
         )}
 
         <div
-          className="relative mx-auto w-full max-w-2xl overflow-hidden rounded-3xl border border-[#3E47E0]/20 bg-gray-950/80 p-6 sm:p-8 md:p-10 shadow-[0_0_60px_-12px_rgba(62,71,224,0.45)] backdrop-blur-xl md:max-w-3xl"
+          className="relative mx-auto w-full max-w-3xl overflow-hidden rounded-3xl border border-[#3E47E0]/20 bg-gray-950/80 p-6 sm:p-9 md:p-12 shadow-[0_0_60px_-12px_rgba(62,71,224,0.45)] backdrop-blur-xl md:max-w-4xl"
           data-aos="fade-up"
         >
           <div
@@ -185,15 +177,13 @@ export default function RecruitmentForm() {
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-indigo-500/0 via-indigo-400/50 to-indigo-500/0" aria-hidden />
 
           <div className="relative">
-            <div className="mb-6 sm:mb-8 md:mb-10 text-center">
-              <h2 className="bg-gradient-to-r from-indigo-200 via-white to-indigo-200 bg-clip-text text-2xl font-semibold text-transparent sm:text-3xl md:text-[2.75rem]">
+            <div className="mb-5 sm:mb-7 md:mb-9 text-center">
+              <h2 className="bg-gradient-to-r from-indigo-200 via-white to-indigo-200 bg-clip-text text-xl font-semibold text-transparent sm:text-2xl md:text-[2.35rem]">
                 Join TechClan
               </h2>
               <p className="mt-3 text-sm sm:text-base text-indigo-100/70">
                 Opportunity to collaborate with builders across TechClan.
               </p>
-              
-              {/* Prep Tips Button */}
               <button
                 onClick={() => setShowTips(true)}
                 className="mt-4 inline-flex items-center gap-2 text-sm text-[#3E47E0] hover:text-[#5E67F0] transition-colors underline underline-offset-4"
@@ -358,7 +348,6 @@ export default function RecruitmentForm() {
                 </button>
               </div>
               <div className="mt-3">
-                {/* Success banner */}
                 {status === "success" && (
                   <div className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-500 px-4 py-2 text-white shadow-md">
                     <svg className="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
@@ -371,7 +360,6 @@ export default function RecruitmentForm() {
                   </div>
                 )}
 
-                {/* Global error banner */}
                 {status === "error" && errorMsg && (
                   <div className="mt-2 flex items-start gap-3 rounded-md border border-amber-700 bg-amber-950/10 p-3 text-amber-200">
                     <svg className="h-5 w-5 flex-shrink-0 text-amber-300" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
@@ -380,8 +368,6 @@ export default function RecruitmentForm() {
                     <div className="text-sm">{errorMsg}</div>
                   </div>
                 )}
-
-                {/* Field-level errors (they render under fields already) */}
               </div>
             </form>
           </div>

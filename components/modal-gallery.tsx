@@ -50,14 +50,13 @@ export default function ModalGallery({
   }, [open, total]);
 
   return (
-    <div 
+    <div
       className="relative flex items-center justify-center"
       onMouseEnter={() => onHoverChange?.(true)}
       onMouseLeave={() => onHoverChange?.(false)}
       onFocus={() => onHoverChange?.(true)}
       onBlur={() => onHoverChange?.(false)}
     >
-      {/* Thumbnail button */}
       <button
         onClick={() => {
           setIdx(0);
@@ -77,12 +76,10 @@ export default function ModalGallery({
             priority
             className="block h-auto w-full rounded-2xl object-cover transition-opacity duration-700"
           />
-          {/* 🔵 Bluish tint overlay - lighter for better visibility */}
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-900/40 via-indigo-500/20 to-indigo-900/40 mix-blend-overlay pointer-events-none" />
         </figure>
       </button>
 
-      {/* Modal */}
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogBackdrop
           transition

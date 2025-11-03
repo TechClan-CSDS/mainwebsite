@@ -7,7 +7,6 @@ export async function connectToDatabase() {
 
   const uri = process.env.MONGODB_URI;
   if (!uri) {
-    // Defer throwing until runtime when connect is actually attempted.
     throw new Error("Please define the MONGODB_URI environment variable in .env.local or the hosting provider settings");
   }
 

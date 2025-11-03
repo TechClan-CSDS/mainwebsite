@@ -7,7 +7,6 @@ export default function Footer() {
     <footer>
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid grid-cols-2 justify-between gap-12 py-8 md:grid-cols-4 md:py-12">
-          {/* 1st block */}
           <div className="space-y-2">
             <h3 className="text-sm font-medium text-gray-200">Product</h3>
             <ul className="space-y-2 text-sm">
@@ -37,7 +36,6 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          {/* 2nd block */}
           <div className="space-y-2">
             <h3 className="text-sm font-medium text-gray-200">Company</h3>
             <ul className="space-y-2 text-sm">
@@ -67,7 +65,6 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          {/* 3rd block */}
           <div className="space-y-2">
             <h3 className="text-sm font-medium text-gray-200">Resources</h3>
             <ul className="space-y-2 text-sm">
@@ -97,7 +94,6 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          {/* 4th block */}
           <div className="col-span-2 md:col-span-1">
             <div className="mb-3">
               <Logo />

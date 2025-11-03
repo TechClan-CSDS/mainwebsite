@@ -10,7 +10,6 @@ export default function Hero() {
   const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
-    // Honor prefers-reduced-motion
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
 
