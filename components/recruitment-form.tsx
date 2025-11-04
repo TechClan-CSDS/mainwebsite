@@ -153,7 +153,7 @@ export default function RecruitmentForm() {
                 
                 <div className="mt-6 p-4 bg-[#3E47E0]/10 border border-[#3E47E0]/30 rounded-xl">
                   <p className="text-indigo-200 text-sm">
-                    <span className="font-semibold">📅 Dates:</span> Will be announced soon after applications close.
+                    <span className="font-semibold">Dates:</span> Will be announced soon after applications close.
                   </p>
                 </div>
               </div>

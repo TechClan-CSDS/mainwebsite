@@ -116,9 +116,10 @@ export default function ModalGallery({
                       priority={i === idx}
                       loading={i === idx ? "eager" : "lazy"}
                     />
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-900/60 via-indigo-500/25 to-indigo-900/60 mix-blend-overlay pointer-events-none" />
                   </div>
                 ))}
+
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-900/60 via-indigo-500/25 to-indigo-900/60 mix-blend-overlay pointer-events-none" />
 
                 {total > 1 && (
                   <>
